@@ -50,7 +50,12 @@ Phase 2 is named "Gap Mining" (source-agnostic). All active miners spawn in para
 
 ## Core methodology — three-phase loop
 
-### Phase 0 — Full Inventory Pull
+### Phase 0 — Understand the Brand FIRST
+Before pulling a single ad, fetch the brand's website and key landing pages. Extract: exact products, specific health claims (verbatim), key ingredients, certifications, conditions explicitly addressed, and conditions NOT addressed. Produce a Brand Profile that gates all downstream analysis. Every gap persona must pass a brand-fit check against this profile — if the brand doesn't have the ingredients or claims to credibly serve a persona, it fails regardless of demand signal.
+
+**Lesson learned:** In the Grüns session, we mined gap personas (caffeine crash, endurance athlete) before understanding the product. The caffeine crash persona had HIGH demand but WEAK product fit — Grüns doesn't position as an energy supplement. We almost put it in a LinkedIn post. Understanding the brand first prevents recommending gaps the product can't credibly serve.
+
+### Phase 0.5 — Full Inventory Pull
 Pull ALL active ads from every brand page (not a sample). Use `fetch_all: true` and `sort_by: total_impressions`. Also run a keyword search for the brand name to discover partner/whitelisted/affiliate ads on other pages. Report total ad count before proceeding.
 
 ### Phase 1 — Portfolio Analysis (Gemini-verified)
@@ -173,6 +178,7 @@ These failure modes were discovered during a live audit and must be avoided:
 5. **Always check the partner layer.** 23.5% of a brand's ad ecosystem can run through affiliate/whitelisted pages invisible to an owned-page-only pull.
 6. **Always validate demand.** Gap personas mined from Reddit/X may have no real audience on Meta. Run Grok x_search to check conversation volume before recommending.
 7. **State confidence levels on every claim.** Verified (Gemini/countable) vs. estimated (aggregated) vs. inferred (metadata-derived).
+8. **Understand the brand BEFORE mining gaps.** Fetch the brand's website and extract exact product claims, ingredients, and conditions addressed BEFORE running any gap analysis. A persona with HIGH demand but WEAK product fit is a worse recommendation than no recommendation. In the Grüns session, "afternoon caffeine crash" had the most compelling Reddit quote (score: 357) but Grüns doesn't credibly address energy crashes — nearly went into a LinkedIn post before this was caught.
 
 ## Output format (synthesizer renders this)
 

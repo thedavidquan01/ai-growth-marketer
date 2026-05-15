@@ -27,10 +27,14 @@ If missing: stop and return a structured error to the orchestrator telling the u
 
 ### 1. Build the query plan
 
-From the portfolio profile, identify:
-- The product **category** (e.g. hormonal health, skincare, beverage)
-- The **already-covered Macros and Micros** (you will not duplicate)
-- The brand's **offer surface** — what problem the product credibly addresses
+From the **Brand Profile** (provided by the orchestrator from Phase 0), identify:
+- The product **category** and **format** (e.g. greens gummy, protein powder)
+- The **specific ingredients** the product contains (this gates credible claims)
+- The **conditions the brand explicitly claims to address** (from their website)
+- The **conditions the brand does NOT claim to address** (hard brand-fit boundary)
+- The **already-covered Macros and Micros** from Phase 1 (you will not duplicate)
+
+**Brand-fit gate:** Every candidate persona must pass: "Does the brand's actual product — its specific ingredients and explicit claims — credibly address this persona's problem?" If it requires a stretch, the persona fails. A greens gummy with B vitamins doesn't credibly fix afternoon caffeine crashes even if B vitamins "support energy metabolism."
 
 Generate **3–5 X search topics** that probe:
 - **Adjacent pain language** the brand could plausibly serve but isn't currently speaking to

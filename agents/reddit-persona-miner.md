@@ -16,10 +16,16 @@ Given a brand name and the brand's signed-off portfolio profile (from Phase 1), 
 ## Method
 
 ### 1. Build the search frontier
-From the portfolio profile, identify:
-- The product **category** (e.g. hormonal health, skincare, beverage)
-- The **already-covered personas** (you will *not* surface gaps that duplicate these)
-- The brand's **offer surface** — what problem the product credibly addresses
+From the **Brand Profile** (provided by the orchestrator from Phase 0), identify:
+- The product **category** and **format** (e.g. greens gummy, protein powder, skincare serum)
+- The **specific ingredients** the product contains (this gates which health claims are credible)
+- The **conditions the brand explicitly claims to address** (from their website — not inferred)
+- The **conditions the brand does NOT claim to address** (the hard brand-fit boundary)
+- The **already-covered personas** from Phase 1 (you will *not* surface gaps that duplicate these)
+
+**Brand-fit gate:** Every candidate gap persona must pass this test: "Does the brand's actual product — its specific ingredients and explicit claims — credibly address this persona's problem?" If the answer requires a stretch (e.g. "B vitamins support energy" for an afternoon caffeine crash), the persona fails the gate. Directionally related is not enough — the product must have a defensible claim.
+
+Generate a query plan that targets:
 
 Generate a query plan that targets:
 - **Adjacent identity tribes** the brand could plausibly serve (e.g. for a women's hormonal-health brand: r/Perimenopause, r/Endo, r/PCOS, r/breastfeeding, r/AskWomenOver30, r/AdvancedRunning women's threads, etc.)

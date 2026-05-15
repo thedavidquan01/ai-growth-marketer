@@ -22,9 +22,43 @@ Read: skills/persona-coverage-methodology/SKILL.md
 
 Execute these phases sequentially. The strategist review loops within Phase 1 and Phase 2 are mandatory — do not skip them.
 
-### Phase 0 — Full Inventory Pull (no sampling)
+### Phase 0 — Understand the Brand (BEFORE touching ads)
 
-Before spawning the analyzer, pull the complete ad inventory:
+Before pulling a single ad, understand what the brand actually sells and claims. This determines which gap personas are plausible and which are a stretch.
+
+1. **Fetch the brand's website** via WebFetch on their homepage. Extract:
+   - Exact product(s) and product lines
+   - Specific health/benefit claims (verbatim — what do they say on the site?)
+   - Key ingredients highlighted
+   - Certifications (vegan, gluten-free, etc.)
+   - Target audience as described on-site
+   - Pricing and format
+
+2. **Fetch key landing pages** — check for LP paths that reveal the brand's own positioning:
+   - Any condition-specific pages (e.g. `/glp-1`, `/fertility`, `/perimenopause`)
+   - Product comparison or "vs" pages
+   - About/founder story pages
+
+3. **Produce a Brand Profile** that gates all downstream analysis:
+
+```
+## Brand Profile
+- Product: <what it is>
+- Format: <pill, gummy, powder, liquid, etc.>
+- Core claims: <verbatim from site>
+- Key ingredients: <list>
+- Certifications: <list>
+- Conditions they explicitly address: <list>
+- Conditions they do NOT address: <list — this is the brand-fit gate for gap mining>
+- Target audience (per site): <description>
+- Price point: <$X/month>
+```
+
+This profile is passed to EVERY downstream agent. The gap miners must check each candidate persona against this profile — if the brand doesn't have the ingredients or claims to credibly serve a persona, that persona fails the brand-fit gate regardless of demand signal.
+
+### Phase 0.5 — Full Inventory Pull (no sampling)
+
+After the brand profile is established, pull the complete ad inventory:
 
 1. Use `resolve-company` to get the brand's page ID(s).
 2. Pull ALL active ads from each page with `meta-search-ads` using `fetch_all: true`, `sort_by: total_impressions`.
@@ -68,6 +102,7 @@ For each active miner, run this loop in parallel with the others:
 
 1. Spawn the miner agent. Pass it:
    - Brand name
+   - **The Brand Profile from Phase 0** (so it knows what the product actually does, claims, and contains — this gates brand-fit)
    - The signed-off Phase 1 portfolio profile (so it knows what is *already* covered at the Macro × Micro × Vehicle level)
 2. Spawn the `dtc-strategist-reviewer` agent. Pass:
    - Phase tag: `phase-2-<source>` (e.g. `phase-2-reddit`, `phase-2-grok-x`)
