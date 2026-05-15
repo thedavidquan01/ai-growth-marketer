@@ -1,0 +1,9 @@
+{
+  "name": "ai-growth-marketer",
+  "version": "1.0.0",
+  "description": "AI-powered creative portfolio auditor. Gemini-verifies every ad in a brand's Meta portfolio, mines Reddit and X for gap personas with verified quotes, validates demand, and produces a prioritized coverage brief.",
+  "author": {
+    "name": "David Quan"
+  },
+  "keywords": ["dtc", "creative-strategy", "persona-coverage", "ad-library", "reddit", "grok", "gemini", "meta-ads", "growth-marketing"]
+}
