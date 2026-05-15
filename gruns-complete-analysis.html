@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grüns — Complete Persona Coverage Analysis</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; padding: 24px; }
+  h1 { font-size: 20px; margin-bottom: 2px; color: #f0f6fc; }
+  .subtitle { font-size: 12px; color: #8b949e; margin-bottom: 20px; }
+  h2 { font-size: 14px; margin: 28px 0 10px; color: #58a6ff; border-bottom: 1px solid #21262d; padding-bottom: 4px; }
+  h3 { font-size: 12px; margin: 20px 0 6px; color: #f0883e; }
+  .legend { display: flex; gap: 16px; margin-bottom: 16px; font-size: 11px; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .legend .sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  .cov { background: #1f6feb; }
+  .emp { background: #161b22; }
+  .rec { background: #da3633; }
+  .new { background: #f0883e; }
+  .tri { background: #a371f7; }
+  .test { background: #2ea043; }
+  table { border-collapse: collapse; font-size: 10px; width: 100%; margin-bottom: 24px; }
+  th, td { border: 1px solid #21262d; padding: 3px 4px; text-align: center; min-width: 32px; }
+  th { background: #161b22; color: #8b949e; font-weight: 600; position: sticky; top: 0; z-index: 2; font-size: 9px; }
+  th.rh { text-align: left; min-width: 180px; position: sticky; left: 0; z-index: 3; background: #161b22; }
+  td.rh { text-align: left; font-weight: 500; color: #c9d1d9; position: sticky; left: 0; background: #0d1117; z-index: 1; min-width: 180px; font-size: 10px; }
+  td.ml { text-align: left; font-weight: 700; color: #58a6ff; background: #161b22 !important; position: sticky; left: 0; z-index: 1; font-size: 11px; }
+  .c { background: #1a3a5c; color: #58a6ff; font-weight: 700; }
+  .c2 { background: #0e4429; color: #3fb950; font-weight: 700; }
+  .e { background: #1a1a1a; color: #484f58; }
+  .g { background: #3d1e1e; color: #f85149; font-weight: 700; }
+  .n { background: #3d2a10; color: #f0883e; font-weight: 700; }
+  .t { background: #2d1f4e; color: #bc8cff; font-weight: 700; }
+  .sg { height: 3px; background: #0d1117; }
+  .sg td { border: none; padding: 0; background: #0d1117; }
+  .w { overflow-x: auto; }
+  .notes { font-size: 11px; color: #8b949e; line-height: 1.5; max-width: 1000px; margin-top: 16px; }
+  .notes strong { color: #c9d1d9; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+  .stat-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; }
+  .stat-card h4 { font-size: 11px; color: #8b949e; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-val { font-size: 28px; font-weight: 700; color: #f0f6fc; }
+  .stat-sub { font-size: 11px; color: #8b949e; margin-top: 2px; }
+  .bar { height: 6px; border-radius: 3px; margin: 3px 0; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .warn { color: #f85149; font-weight: 600; }
+  .ok { color: #3fb950; }
+  .mid { color: #e3b341; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; padding: 24px; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 20px; color: #f0f6fc; margin-bottom: 2px; }
+  .sub { font-size: 12px; color: #8b949e; margin-bottom: 24px; }
+  h2 { font-size: 15px; color: #58a6ff; margin: 32px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+  h3 { font-size: 13px; color: #f0883e; margin: 24px 0 8px; }
+
+  /* Priority cards */
+  .priority-list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+  .p-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px 20px; display: grid; grid-template-columns: 48px 1fr 200px; gap: 16px; align-items: start; }
+  .p-rank { font-size: 28px; font-weight: 800; color: #484f58; line-height: 1; }
+  .p-rank.top3 { color: #f85149; }
+  .p-body h4 { font-size: 13px; color: #f0f6fc; margin-bottom: 4px; }
+  .p-body .micro { font-size: 11px; color: #58a6ff; margin-bottom: 6px; }
+  .p-body .why { font-size: 11px; color: #8b949e; line-height: 1.5; }
+  .p-scores { display: flex; flex-direction: column; gap: 6px; }
+  .score-row { display: flex; align-items: center; gap: 8px; font-size: 10px; }
+  .score-label { width: 80px; color: #8b949e; text-align: right; flex-shrink: 0; }
+  .score-bar-bg { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .score-val { width: 24px; font-weight: 700; color: #c9d1d9; font-size: 10px; }
+  .tag { display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; margin-right: 4px; }
+  .tag-vehicle { background: #1a3a5c; color: #58a6ff; }
+  .tag-macro { background: #2d1f4e; color: #bc8cff; }
+  .tag-new { background: #3d1e1e; color: #f85149; }
+  .tag-test { background: #0e4429; color: #3fb950; }
+
+  /* 2x2 matrix */
+  .matrix-container { position: relative; width: 100%; max-width: 700px; aspect-ratio: 1.4; margin: 20px auto; }
+  .matrix-bg { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; }
+  .matrix-bg .q { padding: 20px; display: flex; flex-direction: column; }
+  .q1 { background: #1a0e0e; border-right: 1px solid #30363d; border-bottom: 1px solid #30363d; }
+  .q2 { background: #0e1a0e; border-bottom: 1px solid #30363d; }
+  .q3 { background: #161b22; border-right: 1px solid #30363d; }
+  .q4 { background: #1a1a0e; }
+  .q-label { font-size: 10px; color: #484f58; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .q-items { font-size: 10px; line-height: 1.8; color: #8b949e; }
+  .q-items strong { color: #c9d1d9; font-weight: 600; }
+  .q-items .hi { color: #f85149; font-weight: 600; }
+  .q-items .med { color: #e3b341; }
+  .axis-label { position: absolute; font-size: 10px; color: #484f58; text-transform: uppercase; letter-spacing: 1px; }
+  .axis-x { bottom: -20px; left: 50%; transform: translateX(-50%); }
+  .axis-y { top: 50%; left: -50px; transform: translateY(-50%) rotate(-90deg); white-space: nowrap; }
+  .axis-x-left { bottom: -20px; left: 15%; font-size: 9px; color: #484f58; position: absolute; }
+  .axis-x-right { bottom: -20px; right: 15%; font-size: 9px; color: #484f58; position: absolute; }
+  .axis-y-top { top: 8px; left: -40px; font-size: 9px; color: #484f58; position: absolute; transform: rotate(-90deg); }
+  .axis-y-bot { bottom: 8px; left: -40px; font-size: 9px; color: #484f58; position: absolute; transform: rotate(-90deg); }
+
+  /* Waterfall chart */
+  .waterfall { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; }
+  .wf-row { display: grid; grid-template-columns: 200px 1fr 60px; align-items: center; gap: 8px; }
+  .wf-label { font-size: 11px; color: #c9d1d9; text-align: right; }
+  .wf-bar-bg { height: 24px; background: #21262d; border-radius: 4px; overflow: hidden; position: relative; }
+  .wf-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 9px; font-weight: 700; color: #0d1117; }
+  .wf-val { font-size: 11px; color: #8b949e; }
+
+  /* Scoring explanation */
+  .scoring-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
+  .s-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; }
+  .s-card h5 { font-size: 11px; color: #58a6ff; margin-bottom: 4px; }
+  .s-card .weight { font-size: 20px; font-weight: 800; color: #f0f6fc; }
+  .s-card p { font-size: 10px; color: #8b949e; margin-top: 4px; line-height: 1.4; }
+
+  .notes { font-size: 11px; color: #8b949e; line-height: 1.5; margin-top: 20px; border-top: 1px solid #21262d; padding-top: 12px; }
+  .notes strong { color: #c9d1d9; }
+
+</style>
+</head>
+<body>
+
+<div id="overview"></div>
+<div style="position:fixed; top:0; left:0; right:0; background:#161b22; border-bottom:1px solid #21262d; padding:8px 24px; z-index:100; display:flex; gap:16px; font-size:12px;">
+  <a href="#overview" style="color:#58a6ff; text-decoration:none;">Overview</a>
+  <a href="#adult-grid" style="color:#58a6ff; text-decoration:none;">Adult Grid</a>
+  <a href="#kids-grid" style="color:#58a6ff; text-decoration:none;">Kids Grid</a>
+  <a href="#gaps" style="color:#58a6ff; text-decoration:none;">Gap Tables</a>
+  <a href="#priority" style="color:#58a6ff; text-decoration:none;">Priority Ranking</a>
+  <a href="#matrix-2x2" style="color:#58a6ff; text-decoration:none;">2×2 Matrix</a>
+  <a href="#sprint" style="color:#58a6ff; text-decoration:none;">Sprint Plan</a>
+</div>
+<div style="height:36px;"></div>
+<h1>Grüns — Full Portfolio Coverage Matrix</h1>
+<p class="subtitle">438 ads analyzed (218 adult + 220 kids) · Sorted by impressions · Full grid + priority ranking · May 2026</p>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <h4>Total Ads Analyzed</h4>
+    <div class="stat-val">438</div>
+    <div class="stat-sub">218 adult · 220 kids</div>
+  </div>
+  <div class="stat-card">
+    <h4>Distinct Entity IDs (est.)</h4>
+    <div class="stat-val warn">~25-28</div>
+    <div class="stat-sub">from 438 ad slots — 94% signal compression</div>
+  </div>
+  <div class="stat-card">
+    <h4>UGC Creator Testimonials</h4>
+    <div class="stat-val warn">0</div>
+    <div class="stat-sub">zero across entire portfolio</div>
+  </div>
+  <div class="stat-card">
+    <h4>Adult Founder VSLs</h4>
+    <div class="stat-val warn">0</div>
+    <div class="stat-sub">Kids has 4 · Adult has zero</div>
+  </div>
+  <div class="stat-card">
+    <h4>Unaware-Stage Creative</h4>
+    <div class="stat-val warn">~2%</div>
+    <div class="stat-sub">~9 of 438 ads target Stage 1</div>
+  </div>
+  <div class="stat-card">
+    <h4>Male UGC Presenters</h4>
+    <div class="stat-val warn">0</div>
+    <div class="stat-sub">despite 30+ male-targeted ads</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="sw cov"></span> Covered (ads live)</span>
+  <span><span class="sw" style="background:#0e4429"></span> Early test (1-3 ads)</span>
+  <span><span class="sw emp"></span> Empty (white space)</span>
+  <span><span class="sw rec"></span> Gap fill recommended</span>
+  <span><span class="sw new"></span> Net-new gap opportunity</span>
+  <span><span class="sw tri"></span> Triangulated gap (2+ sources)</span>
+</div>
+
+<div id="adult-grid"></div><h2>Adult Portfolio — Macro × Vehicle Matrix (218 ads)</h2>
+
+<div class="w">
+<table>
+<thead>
+<tr>
+  <th class="rh">Micro Persona</th>
+  <th>DCO<br>Carousel</th>
+  <th>Brand<br>Video</th>
+  <th>Static<br>IMAGE</th>
+  <th>UGC<br>F2C<br>Female</th>
+  <th>UGC<br>Male<br>Presenter</th>
+  <th>UGC<br>Expert/<br>Clinical</th>
+  <th>Celebrity<br>Influencer</th>
+  <th>Reddit<br>Text<br>Static</th>
+  <th>Founder<br>VSL</th>
+  <th>Struct.<br>Testim.</th>
+  <th>Side-by<br>-Side</th>
+  <th>UGC<br>Desk/<br>Office</th>
+  <th>Quiz<br>Funnel</th>
+  <th>Compet.<br>Compare</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td class="ml" colspan="15">Gut-Health Optimizer (~66 ads, 30%)</td></tr>
+<tr>
+  <td class="rh">Digestive Rebuilder / Gut-First</td>
+  <td class="c">~35</td><td class="c">~18</td><td class="c">~6</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="g">gap</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Fiber-Deficit Recognizer</td>
+  <td class="c">~6</td><td class="c">~2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">IBS Sufferer (new test)</td>
+  <td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">GLP-1 Companion Seeker (~58 ads, 27%)</td></tr>
+<tr>
+  <td class="rh">Nutritional Gap Fixer</td>
+  <td class="c">~20</td><td class="c">~6</td><td class="c">~4</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="g">gap</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Muscle-Preservation Dieter</td>
+  <td class="c">~3</td><td class="c">~1</td><td class="c">~1</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Hair Loss Panicker</td>
+  <td class="c">~4</td><td class="e">—</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Dental Damage Avoider</td>
+  <td class="c">~3</td><td class="e">—</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Fiber-Deficient GLP-1 User</td>
+  <td class="c">~3</td><td class="c2">1</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Male GLP-1 / Weight-Loss (~14 ads, 6%)</td></tr>
+<tr>
+  <td class="rh">High-Output Male GLP-1 User</td>
+  <td class="c">~4</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Calorie-Counting Man</td>
+  <td class="c2">1</td><td class="e">—</td><td class="c2">1</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Male Fertility / TTC (~12 ads, 5%)</td></tr>
+<tr>
+  <td class="rh">TTC Patient Partner</td>
+  <td class="c">~8</td><td class="c">~3</td><td class="c2">1</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">General Wellness Seeker (~26 ads, 12%)</td></tr>
+<tr>
+  <td class="rh">Hassle-Free Health Maintainer</td>
+  <td class="c">~8</td><td class="c">~4</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Taste-First Convert</td>
+  <td class="c">~5</td><td class="c">~3</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Convenience Seeker</td>
+  <td class="c">~4</td><td class="c2">2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Gen-Z Gut Girlie (~6 ads, 3%)</td></tr>
+<tr>
+  <td class="rh">Bloat-Embarrassed Identity Seeker</td>
+  <td class="c">~3</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Main Character Gut Girlie</td>
+  <td class="e">—</td><td class="c2">1</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Overwhelmed Provider Male (~4 ads, 2%) 🟢 test</td></tr>
+<tr>
+  <td class="rh">Deprioritized Self / Overwhelmed Dad</td>
+  <td class="c2">2</td><td class="c2">1</td><td class="c2">1</td>
+  <td class="e">—</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td>
+  <td class="c2">1</td><td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Beauty-from-Within (~5 ads, 2%)</td></tr>
+<tr>
+  <td class="rh">Inner Glow Seeker</td>
+  <td class="c2">1</td><td class="e">—</td><td class="c">~3</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Biohacker / Methylation (~4 ads, 2%) 🟢 test</td></tr>
+<tr>
+  <td class="rh">Absorption Maximizer</td>
+  <td class="c2">2</td><td class="c2">2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Perimenopause (~2 ads, 1%) 🟢 test</td></tr>
+<tr>
+  <td class="rh">Hormonal Transition Navigator</td>
+  <td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Celebrity / Influencer (~8 ads, 4%)</td></tr>
+<tr>
+  <td class="rh">Celebrity-Validated (Uzo/Rinna/Corcoran)</td>
+  <td class="c">~5</td><td class="c2">2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="c">~7</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Bro-Science Vouched Skeptic</td>
+  <td class="c2">1</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">OLIPOP Collab Adult (~7 ads, 3%)</td></tr>
+<tr>
+  <td class="rh">Trend-Native Treat Seeker</td>
+  <td class="c">~5</td><td class="e">—</td><td class="c2">2</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Partner / Gift Shopper (~2 ads, 1%) 🟢 test</td></tr>
+<tr>
+  <td class="rh">Worried Wife / Partner Buyer</td>
+  <td class="c2">1</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Other (Collagen, Non-Drug WL, Offer) (~11 ads, 5%)</td></tr>
+<tr>
+  <td class="rh">Discount / Offer (Most Aware)</td>
+  <td class="c">~6</td><td class="e">—</td><td class="c2">2</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div id="kids-grid"></div><h2>Kids Portfolio — Macro × Vehicle Matrix (220 ads)</h2>
+
+<div class="w">
+<table>
+<thead>
+<tr>
+  <th class="rh">Micro Persona</th>
+  <th>DCO<br>Carousel</th>
+  <th>Brand<br>Video</th>
+  <th>Static<br>IMAGE</th>
+  <th>UGC<br>Parent<br>F2C</th>
+  <th>Influencer<br>DCO</th>
+  <th>Founder<br>VSL</th>
+  <th>Clinical<br>Authority</th>
+  <th>Collab<br>Static</th>
+  <th>Collab<br>Video</th>
+  <th>Reddit<br>Text</th>
+  <th>Struct.<br>Testim.</th>
+  <th>Quiz<br>Funnel</th>
+  <th>Retail/<br>Walmart</th>
+  <th>Compet.<br>Compare</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td class="ml" colspan="15">OLIPOP Brand Collab (~75 ads, 34%) ⚠️ concentration</td></tr>
+<tr>
+  <td class="rh">Mom-Crossover Buyer</td>
+  <td class="e">—</td><td class="e">—</td><td class="c">~8</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="c">~50</td><td class="c">~5</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Palatability Doubter</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="c">~12</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Picky Eater Parent (~36 ads, 16%)</td></tr>
+<tr>
+  <td class="rh">Simplicity Seeker (picky)</td>
+  <td class="c">~15</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Nutritional Gap Worrier</td>
+  <td class="c">~4</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="g">gap</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Kid-Approval Seeker</td>
+  <td class="c2">1</td><td class="c">~3</td><td class="e">—</td>
+  <td class="e">—</td><td class="c2">1</td><td class="c2">1</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Resignation Realist</td>
+  <td class="c2">2</td><td class="c2">1</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Convenience-First Mom (~34 ads, 15%)</td></tr>
+<tr>
+  <td class="rh">Simplicity Seeker (convenience)</td>
+  <td class="c">~12</td><td class="c">~4</td><td class="c2">1</td>
+  <td class="e">—</td><td class="c2">3</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Lunchbox Parent</td>
+  <td class="c">~6</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Gut-Anxious Parent (~26 ads, 12%)</td></tr>
+<tr>
+  <td class="rh">Constipation Solver</td>
+  <td class="c">~10</td><td class="c">~4</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="g">gap</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="g">gap</td><td class="c2">1</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Germ/Immunity Parent</td>
+  <td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="c2">1</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Potty Training Parent</td>
+  <td class="c2">3</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Trust-Seeking / Founder Gut</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="c2">2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Clean-Label Advocate (~12 ads, 5%)</td></tr>
+<tr>
+  <td class="rh">Ingredient Investigator (Red 40)</td>
+  <td class="c">~4</td><td class="c2">2</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Nutritional Completeness Seeker</td>
+  <td class="c">~4</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Development-Anxious Parent (~8 ads, 4%) 🟢 test</td></tr>
+<tr>
+  <td class="rh">Growth-Stage Monitor</td>
+  <td class="c">~7</td><td class="c2">1</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Busy Working Parent (~5 ads, 2%) 🟢 test — strongest copy</td></tr>
+<tr>
+  <td class="rh">Permission Seeker / Guilt-Mitigation</td>
+  <td class="c2">2</td><td class="e">—</td><td class="c2">2</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">Neurodivergent / SPD Parent (~2 ads, 1%) 🟢 brand-new</td></tr>
+<tr>
+  <td class="rh">Sensory-Safe Seeker</td>
+  <td class="c2">2</td><td class="e">—</td><td class="e">—</td>
+  <td class="g">gap</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+
+<tr class="sg"><td colspan="15"></td></tr>
+<tr><td class="ml" colspan="15">General / Retail / Offer (~22 ads, 10%)</td></tr>
+<tr>
+  <td class="rh">Deal-Seeker (Most Aware)</td>
+  <td class="c">~4</td><td class="e">—</td><td class="c">~3</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Retail-Channel Converter (Walmart)</td>
+  <td class="c">~11</td><td class="e">—</td><td class="c2">1</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="c">~11</td><td class="e">—</td>
+</tr>
+<tr>
+  <td class="rh">Skeptical Ingredient Parent</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td>
+  <td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="e">—</td><td class="c2">1</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div id="gaps"></div><h2>Net-New Gap Opportunities (not tested anywhere in 438 ads)</h2>
+
+<div class="w">
+<table>
+<thead>
+<tr>
+  <th class="rh">Gap Persona</th>
+  <th>Source</th>
+  <th>Awareness<br>Stage Fill</th>
+  <th>Vehicle<br>Unlock</th>
+  <th>Reiss</th>
+  <th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td class="rh" style="color:#bc8cff;">Pill-Fatigued Compliance Dropout</td>
+  <td>Grok+X</td><td>Problem→Solution</td><td>Side-by-side, Reddit static</td><td>Order</td>
+  <td style="color:#f85149; font-weight:700;">HIGH — format IS the product</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#bc8cff;">Greens-Taste Refuser</td>
+  <td>Grok+X</td><td style="color:#f85149;">Unaware</td><td>UGC reaction, taste static</td><td>Saving</td>
+  <td style="color:#f85149; font-weight:700;">HIGH — only gummy brand can run this</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#bc8cff;">Supplement Stack Simplifier</td>
+  <td>Reddit + Grok+X</td><td>Problem→Solution</td><td>Founder VSL, Reddit static</td><td>Order</td>
+  <td style="color:#f85149; font-weight:700;">HIGH — fills 2 vehicle gaps</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">PCOS Protocol-Exhausted Skeptic</td>
+  <td>Reddit</td><td>Solution Aware</td><td>UGC stack-show, carousel</td><td>Independence</td>
+  <td style="color:#e3b341;">MEDIUM</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">Postpartum Fall-Through</td>
+  <td>Reddit</td><td style="color:#f85149;">Problem Aware</td><td>UGC confessional, testimonial</td><td>Acceptance</td>
+  <td style="color:#e3b341;">MEDIUM</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">College Student Gap-Year Body</td>
+  <td>Reddit</td><td>Problem→Solution</td><td>UGC dorm comedic, static</td><td>Independence</td>
+  <td style="color:#e3b341;">MEDIUM</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">Plant-Based Identity Performer</td>
+  <td>Reddit</td><td>Problem Aware</td><td>UGC male athlete, Reddit static</td><td>Independence</td>
+  <td style="color:#e3b341;">MEDIUM</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">Endurance Athlete Recovery Deficit</td>
+  <td>Reddit</td><td>Problem Aware</td><td>UGC post-run, diagnostic carousel</td><td>Curiosity</td>
+  <td style="color:#8b949e;">LOWER</td>
+</tr>
+<tr>
+  <td class="rh" style="color:#f0883e;">Afternoon Caffeine Hostage</td>
+  <td>Grok+X</td><td style="color:#f85149;">Unaware</td><td>Reddit humor static, UGC desk</td><td>Tranquility</td>
+  <td style="color:#8b949e;">LOWER</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>Scale Opportunities (already tested, need investment)</h2>
+
+<div class="w">
+<table>
+<thead>
+<tr>
+  <th class="rh">Existing Macro</th>
+  <th>Current<br>Ads</th>
+  <th>Missing Vehicle</th>
+  <th>Action</th>
+  <th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td class="rh">ALL Adult Micros</td><td>218</td>
+  <td style="color:#f85149; font-weight:700;">Founder VSL (0 adult)</td>
+  <td>Build 1 adult Founder VSL for Gut-Health or GLP-1</td>
+  <td style="color:#f85149; font-weight:700;">#1</td>
+</tr>
+<tr>
+  <td class="rh">ALL Micros (438 total)</td><td>438</td>
+  <td style="color:#f85149; font-weight:700;">UGC Creator Testimonial (0)</td>
+  <td>Brief 1 peer-to-peer testimonial for any top Macro</td>
+  <td style="color:#f85149; font-weight:700;">#2</td>
+</tr>
+<tr>
+  <td class="rh">Working Parent (Kids)</td><td>5</td>
+  <td style="color:#f85149;">UGC video, Reddit static</td>
+  <td>Add video of "You're not a bad parent" concept</td>
+  <td style="color:#f85149; font-weight:700;">#3</td>
+</tr>
+<tr>
+  <td class="rh">Male-targeted (all)</td><td>30+</td>
+  <td style="color:#f85149; font-weight:700;">UGC Male Presenter (0)</td>
+  <td>Brief 1 male talking-head for fertility or GLP-1 men</td>
+  <td style="color:#f85149; font-weight:700;">#4</td>
+</tr>
+<tr>
+  <td class="rh">OLIPOP Kids Collab</td><td>75</td>
+  <td style="color:#e3b341;">UGC taste-test video</td>
+  <td>Add video (mom reaction, recipe) to earn new Entity IDs</td>
+  <td style="color:#e3b341;">#5</td>
+</tr>
+<tr>
+  <td class="rh">Perimenopause</td><td>2</td>
+  <td>UGC female 40s+, Reddit static</td>
+  <td>Scale with non-anti-aging UGC + text static</td>
+  <td style="color:#e3b341;">#6</td>
+</tr>
+<tr>
+  <td class="rh">Overwhelmed Provider Male</td><td>4</td>
+  <td>UGC male presenter, Founder VSL</td>
+  <td>Add male UGC talking-head to existing "dad" creative</td>
+  <td style="color:#e3b341;">#7</td>
+</tr>
+<tr>
+  <td class="rh">Sensory/Neurodivergent Parent</td><td>2</td>
+  <td>UGC parent, video</td>
+  <td>High-LTV niche — add video + UGC if test signals</td>
+  <td style="color:#8b949e;">#8</td>
+</tr>
+<tr>
+  <td class="rh">Constipation Solver (Kids)</td><td>~12</td>
+  <td>Founder VSL (gut mechanism)</td>
+  <td>60s mechanism-of-action Founder VSL for highest-urgency Micro</td>
+  <td style="color:#8b949e;">#9</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="notes" style="margin-top: 24px; border-top: 1px solid #21262d; padding-top: 16px;">
+  <strong>How to read:</strong><br>
+  • <strong style="color:#58a6ff;">Blue cells with numbers</strong> = live ads in this cell<br>
+  • <strong style="color:#3fb950;">Green cells</strong> = early test (1-3 ads) — watch for scale signals<br>
+  • <strong style="color:#484f58;">— (dash)</strong> = empty cell, no ad exists<br>
+  • <strong style="color:#f85149;">gap</strong> = recommended fill within existing Macro<br>
+  • <strong style="color:#bc8cff;">Purple rows</strong> in gaps table = triangulated across 2+ research sources<br>
+  • <strong style="color:#f0883e;">Orange rows</strong> = single-source gap opportunity<br>
+  • 🟢 = brand is already testing this Macro at low scale<br>
+  • ⚠️ = concentration risk flag<br><br>
+  <strong>Key insight:</strong> 438 ads produce ~25-28 Entity IDs (94% compression). The portfolio's primary structural problem is not missing Macros — it's missing Vehicles. The right side of both matrices (Reddit static, Founder VSL, Structured Testimonial, UGC creator, Side-by-side) is almost entirely empty. Each vehicle add earns a genuinely new Entity ID against existing warm audiences.
+</div>
+
+
+
+
+<div id="priority"></div><h1 style="margin-top:48px; padding-top:24px; border-top:2px solid #58a6ff;">Gap Priority — Ranked by Conversion Probability</h1>
+<p class="sub">Within-portfolio vehicle fills on proven audiences first · Net-new persona tests second</p>
+
+<h2>Scoring Model</h2>
+
+<div class="scoring-grid">
+  <div class="s-card">
+    <h5>Factor 1: Audience Proven</h5>
+    <div class="weight">50%</div>
+    <p>Is the brand already spending on this Macro and converting? Within-portfolio fills (existing audience, new vehicle) always outrank net-new Macros (unproven audience).</p>
+  </div>
+  <div class="s-card">
+    <h5>Factor 2: Purchase Urgency</h5>
+    <div class="weight">30%</div>
+    <p>How close is this Micro to buying? Acute problem states (GLP-1 side effects, constipation crisis) > ambient wellness. Already on medication > considering change.</p>
+  </div>
+  <div class="s-card">
+    <h5>Factor 3: Vehicle Category Proof</h5>
+    <div class="weight">20%</div>
+    <p>Does this vehicle type convert in DTC supplements? UGC testimonial and Founder VSL are category-proven at AG1/Seed/Pendulum. Reddit static is low-cost/high-test-velocity.</p>
+  </div>
+</div>
+
+<h2>Priority Ranking — Top 9 Vehicle Fills (Proven Audiences)</h2>
+
+<div class="priority-list">
+
+  <div class="p-card">
+    <div class="p-rank top3">#1</div>
+    <div class="p-body">
+      <h4>UGC Creator Testimonial → GLP-1 Nutritional Gap Fixer</h4>
+      <div class="micro"><span class="tag tag-new">ZERO UGC IN 438 ADS</span> <span class="tag tag-macro">GLP-1 · est. 20-30% spend</span></div>
+      <div class="why">A real GLP-1 user saying "I was losing hair and energy until I started this" is the single highest-conversion creative the brand doesn't have. Audience is proven (58 ads, 5+ LPs), purchase urgency is maximum (already on medication), vehicle is the #1 converter in DTC supplements.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:95%; background:#3fb950;"></div></div><span class="score-val">9.5</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:95%; background:#f85149;"></div></div><span class="score-val">9.5</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:100%; background:#58a6ff;"></div></div><span class="score-val">10</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:96%; background:#f0f6fc;"></div></div><span class="score-val"><strong>9.6</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank top3">#2</div>
+    <div class="p-body">
+      <h4>Adult Founder VSL → Gut-Health Digestive Rebuilder</h4>
+      <div class="micro"><span class="tag tag-new">ZERO ADULT FOUNDER VSL</span> <span class="tag tag-macro">Gut-Health · 66 ads, 30%</span></div>
+      <div class="why">Largest ad-count Macro with zero Founder VSL across 218 adult ads. AG1, Seed, Pendulum all run this format. The founder explaining "why we built a gummy instead of a powder" directly addresses the format-legitimacy objection. Proven audience, proven vehicle in category.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:100%; background:#3fb950;"></div></div><span class="score-val">10</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#f85149;"></div></div><span class="score-val">7.0</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:100%; background:#58a6ff;"></div></div><span class="score-val">10</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:91%; background:#f0f6fc;"></div></div><span class="score-val"><strong>9.1</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank top3">#3</div>
+    <div class="p-body">
+      <h4>UGC Male Presenter → Male Fertility (TTC)</h4>
+      <div class="micro"><span class="tag tag-new">ZERO MALE UGC IN 438 ADS</span> <span class="tag tag-macro">Male Fertility · 12 ads</span></div>
+      <div class="why">12 ads running, all brand-produced DCO. A real dad saying "we're trying to conceive and here's what I changed" is the most trust-building format for a high-emotion, high-intent purchase. Zero male UGC exists anywhere — this earns a completely new Entity ID type.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:80%; background:#3fb950;"></div></div><span class="score-val">8.0</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:90%; background:#f85149;"></div></div><span class="score-val">9.0</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:90%; background:#58a6ff;"></div></div><span class="score-val">9.0</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:87%; background:#f0f6fc;"></div></div><span class="score-val"><strong>8.7</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#4</div>
+    <div class="p-body">
+      <h4>Structured Testimonial → GLP-1 Hair Loss Panicker</h4>
+      <div class="micro"><span class="tag tag-new">ZERO TESTIMONIALS IN 438 ADS</span> <span class="tag tag-macro">GLP-1 Hair · 5 ads</span></div>
+      <div class="why">Named person + timeline: "Month 1 on Ozempic my hair thinned. Month 3 after Grüns it stopped." Highest-urgency GLP-1 side effect, currently only brand-produced statics. Testimonial format is proven direct-response staple.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:75%; background:#3fb950;"></div></div><span class="score-val">7.5</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:95%; background:#f85149;"></div></div><span class="score-val">9.5</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:90%; background:#58a6ff;"></div></div><span class="score-val">9.0</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:86%; background:#f0f6fc;"></div></div><span class="score-val"><strong>8.6</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#5</div>
+    <div class="p-body">
+      <h4>UGC Video → Working Parent "You're not a bad parent"</h4>
+      <div class="micro"><span class="tag tag-test">NEW TEST · 5 ads</span> <span class="tag tag-vehicle">Zero video</span></div>
+      <div class="why">Strongest copy in the entire portfolio (flagged independently by all 6 batch agents). Currently static + DCO only. Putting this copy in a real mom's mouth on camera earns a new Entity ID and likely doubles reach on a Micro that's already signaling intent.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:65%; background:#3fb950;"></div></div><span class="score-val">6.5</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:80%; background:#f85149;"></div></div><span class="score-val">8.0</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:95%; background:#58a6ff;"></div></div><span class="score-val">9.5</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:79%; background:#f0f6fc;"></div></div><span class="score-val"><strong>7.9</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#6</div>
+    <div class="p-body">
+      <h4>Founder VSL (60s mechanism) → Kids Constipation Solver</h4>
+      <div class="micro"><span class="tag tag-macro">Kids Gut · 12 ads</span> <span class="tag tag-vehicle">Only 9s clips exist</span></div>
+      <div class="why">Highest purchase-urgency Micro in Kids portfolio. Parents searching at 11pm need mechanism depth, not a 9-second clip. Founder explaining "why prebiotics fix constipation" serves the trust gap this Micro carries.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:80%; background:#3fb950;"></div></div><span class="score-val">8.0</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:90%; background:#f85149;"></div></div><span class="score-val">9.0</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#58a6ff;"></div></div><span class="score-val">7.0</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:82%; background:#f0f6fc;"></div></div><span class="score-val"><strong>8.2</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#7</div>
+    <div class="p-body">
+      <h4>Reddit-style Text Static → GLP-1 Dental Damage Avoider</h4>
+      <div class="micro"><span class="tag tag-macro">GLP-1 Dental · 4 ads</span> <span class="tag tag-vehicle">~$0 production cost</span></div>
+      <div class="why">"My dentist asked if I was on Ozempic" as a text-first static. Near-zero production cost, earns a new Entity ID. Dental side-effect fear is acutely felt and under-served (4 ads, all DCO carousel).</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#3fb950;"></div></div><span class="score-val">7.0</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:85%; background:#f85149;"></div></div><span class="score-val">8.5</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#58a6ff;"></div></div><span class="score-val">7.0</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:76%; background:#f0f6fc;"></div></div><span class="score-val"><strong>7.6</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#8</div>
+    <div class="p-body">
+      <h4>UGC Male Presenter → High-Output Male GLP-1 User</h4>
+      <div class="micro"><span class="tag tag-macro">Male GLP-1 · 7 ads</span> <span class="tag tag-vehicle">All brand-produced</span></div>
+      <div class="why">"I'm on Ozempic and I lift — here's what was missing." Male equivalent of #1. Ranks lower only because male GLP-1 is smaller volume than female GLP-1.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#3fb950;"></div></div><span class="score-val">7.0</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:85%; background:#f85149;"></div></div><span class="score-val">8.5</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:85%; background:#58a6ff;"></div></div><span class="score-val">8.5</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:79%; background:#f0f6fc;"></div></div><span class="score-val"><strong>7.9</strong></span></div>
+    </div>
+  </div>
+
+  <div class="p-card">
+    <div class="p-rank">#9</div>
+    <div class="p-body">
+      <h4>Scale Perimenopause with UGC (female 40s+)</h4>
+      <div class="micro"><span class="tag tag-test">EXISTS · 2 ads</span> <span class="tag tag-vehicle">Zero UGC, zero video</span></div>
+      <div class="why">LP exists, Micro is built, but only 2 DCO carousels. A woman in her late 40s talking about brain fog — not anti-aging — earns a new Entity ID against an audience the brand is already paying to reach.</div>
+    </div>
+    <div class="p-scores">
+      <div class="score-row"><span class="score-label">Audience</span><div class="score-bar-bg"><div class="score-bar" style="width:55%; background:#3fb950;"></div></div><span class="score-val">5.5</span></div>
+      <div class="score-row"><span class="score-label">Urgency</span><div class="score-bar-bg"><div class="score-bar" style="width:75%; background:#f85149;"></div></div><span class="score-val">7.5</span></div>
+      <div class="score-row"><span class="score-label">Vehicle proof</span><div class="score-bar-bg"><div class="score-bar" style="width:85%; background:#58a6ff;"></div></div><span class="score-val">8.5</span></div>
+      <div class="score-row"><span class="score-label"><strong>Composite</strong></span><div class="score-bar-bg"><div class="score-bar" style="width:70%; background:#f0f6fc;"></div></div><span class="score-val"><strong>7.0</strong></span></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="matrix-2x2"></div><h2>Conversion vs. TAM — Where Each Gap Sits</h2>
+
+<div class="matrix-container" style="margin-left: 50px;">
+  <div class="matrix-bg">
+    <div class="q q2">
+      <div class="q-label">🎯 Do first — high conversion, big TAM</div>
+      <div class="q-items">
+        <strong class="hi">#1 UGC testimonial → GLP-1 Gap Fixer</strong><br>
+        <strong class="hi">#2 Founder VSL → Gut-Health</strong><br>
+        <strong>#4 Testimonial → GLP-1 Hair Loss</strong><br>
+        <strong>#8 Male UGC → Male GLP-1</strong>
+      </div>
+    </div>
+    <div class="q q1">
+      <div class="q-label">🧪 High conversion, niche TAM</div>
+      <div class="q-items">
+        <strong class="hi">#3 Male UGC → Male Fertility</strong><br>
+        <strong>#6 Founder VSL → Kids Constipation</strong><br>
+        <strong>#7 Reddit static → GLP-1 Dental</strong><br>
+        <strong>#5 UGC video → Working Parent</strong>
+      </div>
+    </div>
+    <div class="q q4">
+      <div class="q-label">📈 TAM unlock — big audience, unproven</div>
+      <div class="q-items">
+        <span class="med">Greens Taste Refuser (Unaware)</span><br>
+        <span class="med">Pill-Fatigued Dropout</span><br>
+        <span class="med">Stack Simplifier</span><br>
+        <span class="med">Afternoon Caffeine Hostage</span><br>
+        <span class="med">Postpartum Fall-Through</span>
+      </div>
+    </div>
+    <div class="q q3">
+      <div class="q-label">⏳ Watch — niche + unproven</div>
+      <div class="q-items">
+        <span>PCOS Skeptic</span><br>
+        <span>Plant-Based Identity Performer</span><br>
+        <span>College Student</span><br>
+        <span>Endurance Athlete</span><br>
+        <span>#9 Perimenopause (exists but thin)</span>
+      </div>
+    </div>
+  </div>
+  <div class="axis-x">TAM Size →</div>
+  <div class="axis-x-left">Niche</div>
+  <div class="axis-x-right">Mass</div>
+  <div class="axis-y-top" style="left:-44px;">High</div>
+  <div class="axis-y-bot" style="left:-44px;">Low</div>
+  <div class="axis-y" style="left:-60px;">Conversion Probability →</div>
+</div>
+
+<h2>Composite Score Waterfall</h2>
+
+<div class="waterfall">
+  <div class="wf-row">
+    <div class="wf-label">#1 UGC → GLP-1 Gap Fixer</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:96%; background: linear-gradient(90deg, #f85149 50%, #3fb950 75%, #58a6ff);">9.6</div></div>
+    <div class="wf-val" style="color:#f85149; font-weight:700;">9.6</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#2 Founder VSL → Gut-Health</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:91%; background: linear-gradient(90deg, #f85149 50%, #3fb950 75%, #58a6ff);">9.1</div></div>
+    <div class="wf-val" style="color:#f85149; font-weight:700;">9.1</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#3 Male UGC → Fertility</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:87%; background: linear-gradient(90deg, #f85149 50%, #3fb950 75%, #58a6ff);">8.7</div></div>
+    <div class="wf-val" style="color:#f85149; font-weight:700;">8.7</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#4 Testimonial → Hair Loss</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:86%; background: linear-gradient(90deg, #e3b341 50%, #3fb950 75%, #58a6ff);">8.6</div></div>
+    <div class="wf-val">8.6</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#5 Founder VSL → Kids Constipation</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:82%; background: linear-gradient(90deg, #e3b341 50%, #3fb950 75%, #58a6ff);">8.2</div></div>
+    <div class="wf-val">8.2</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#6 UGC Video → Working Parent</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:79%; background: linear-gradient(90deg, #e3b341 50%, #3fb950 75%, #58a6ff);">7.9</div></div>
+    <div class="wf-val">7.9</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#7 Male UGC → Male GLP-1</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:79%; background: linear-gradient(90deg, #e3b341 50%, #3fb950 75%, #58a6ff);">7.9</div></div>
+    <div class="wf-val">7.9</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#8 Reddit Static → Dental</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:76%; background: linear-gradient(90deg, #8b949e 50%, #3fb950 75%, #58a6ff);">7.6</div></div>
+    <div class="wf-val">7.6</div>
+  </div>
+  <div class="wf-row">
+    <div class="wf-label">#9 UGC → Perimenopause</div>
+    <div class="wf-bar-bg"><div class="wf-bar" style="width:70%; background: linear-gradient(90deg, #8b949e 50%, #3fb950 75%, #58a6ff);">7.0</div></div>
+    <div class="wf-val">7.0</div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 16px; margin: 8px 0 0 200px; font-size: 9px; color: #484f58;">
+  <span>■ Audience proven (50%)</span>
+  <span style="color:#3fb950;">■ Purchase urgency (30%)</span>
+  <span style="color:#58a6ff;">■ Vehicle proof (20%)</span>
+</div>
+
+<div id="sprint"></div><h2>Sprint Planning View — What to Brief This Week</h2>
+
+<div class="w">
+<table style="max-width: 800px;">
+<thead>
+<tr>
+  <th style="text-align:left; min-width:200px;">Brief</th>
+  <th>Production<br>Cost</th>
+  <th>Entity IDs<br>Earned</th>
+  <th>Time to<br>Live</th>
+  <th>Composite<br>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left; color:#f85149; font-weight:600;">UGC testimonial → GLP-1 (female)</td>
+  <td>$500-1.5K</td>
+  <td style="color:#3fb950; font-weight:700;">+1 new type</td>
+  <td>1-2 weeks</td>
+  <td style="color:#f85149; font-weight:700;">9.6</td>
+</tr>
+<tr>
+  <td style="text-align:left; color:#f85149; font-weight:600;">Adult Founder VSL (gut-health)</td>
+  <td>$2-5K</td>
+  <td style="color:#3fb950; font-weight:700;">+1 new type</td>
+  <td>2-3 weeks</td>
+  <td style="color:#f85149; font-weight:700;">9.1</td>
+</tr>
+<tr>
+  <td style="text-align:left; color:#f85149; font-weight:600;">UGC male → fertility</td>
+  <td>$500-1.5K</td>
+  <td style="color:#3fb950; font-weight:700;">+1 new type</td>
+  <td>1-2 weeks</td>
+  <td style="color:#f85149; font-weight:700;">8.7</td>
+</tr>
+<tr>
+  <td style="text-align:left;">Reddit static → GLP-1 dental</td>
+  <td style="color:#3fb950;">~$0</td>
+  <td>+1</td>
+  <td style="color:#3fb950;">Same day</td>
+  <td>7.6</td>
+</tr>
+<tr>
+  <td style="text-align:left;">UGC video → Working Parent copy</td>
+  <td>$500-1K</td>
+  <td>+1</td>
+  <td>1-2 weeks</td>
+  <td>7.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="notes">
+  <strong>Reading the 2×2:</strong> Top-right quadrant (Do First) = proven audiences with large TAM — these are your highest-ROI briefs. Top-left (Test) = proven audiences with niche TAM — high conversion but smaller scale. Bottom-right (TAM Unlock) = big audiences the brand hasn't tested — higher risk, higher growth ceiling. Bottom-left (Watch) = niche + unproven — monitor signals before investing.<br><br>
+  <strong>Key takeaway:</strong> The top 3 briefs (#1-#3) share one trait — they add a <em>vehicle type that doesn't exist anywhere in 438 ads</em> to a <em>Macro the brand is already spending on</em>. That's the formula: proven audience × missing vehicle type × category-proven format = highest conversion probability per dollar.
+</div>
+
+
+</body>
+</html>

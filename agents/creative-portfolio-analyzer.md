@@ -29,7 +29,7 @@ Also run a **keyword search** for the brand name (`query_type: keyword`) to disc
 
 ### 3. Analyze the actual creative — GEMINI VERIFICATION REQUIRED
 
-**CRITICAL: Do NOT classify ads from metadata (headlines, format tags, LP paths) alone.** The format tag "DCO" does not tell you what's inside the carousel cards. In testing, metadata-only classification was catastrophically wrong — labeling ~70% of a portfolio as "brand-produced" when it was actually UGC creators talking to camera.
+**CRITICAL: Do NOT classify ads from metadata (headlines, format tags, LP paths) alone.** The format tag "carousel" does not tell you what's inside the carousel cards. In testing, metadata-only classification was catastrophically wrong — labeling ~70% of a portfolio as "brand-produced" when it was actually UGC creators talking to camera.
 
 For EVERY ad:
 1. Call `meta-get-ad` to get the full ad details including video/image URLs from each carousel card
@@ -44,7 +44,7 @@ Watch for:
 - Who's on camera (real human face, gender, approximate age)
 - UGC creator vs. brand-produced vs. animated vs. product-only
 - Setting and shot grammar
-- Whether DCO carousel Card 1 and Card 2 contain the same or different video (they're the same ~90% of the time)
+- Whether 2-card carousel Card 1 and Card 2 contain the same or different video (they're the same ~90% of the time)
 - Creator reuse across different ad IDs (same person, different ad shells)
 
 **Every visual claim in the output must state whether it's Gemini-verified or metadata-inferred.**
@@ -88,7 +88,7 @@ After clustering:
 - **Awareness-stage distribution**: are they only talking to product-aware buyers? Or covering up-funnel too?
 - **Vehicle diversity per Micro**: for each Micro the brand ships, count how many distinct Vehicles serve it. A Micro shipped only in one Vehicle is a missed reach unlock.
 - **Entity ID estimate**: rough count of visually distinct concepts vs total ad count. This must be derived from Gemini visual analysis, NOT from metadata. State the Gemini verification rate (e.g. "X of Y ads Gemini-verified, Z metadata-only"). Do NOT present a specific compression percentage (e.g. "94% signal compression") unless every ad has been visually verified — that's false precision on a fuzzy input.
-- **DCO card duplication rate**: what percentage of 2-card carousel ads have the same video in both card slots? This is a structural finding about creative efficiency.
+- **carousel card duplication rate**: what percentage of 2-card carousel ads have the same video in both card slots? This is a structural finding about creative efficiency.
 - **Cross-ad asset reuse**: same video running under multiple ad IDs. Note confirmed cases with matching asset IDs.
 - **Partner/affiliate creative**: how does the partner layer differ from owned-page creative in format, talent, and tone?
 

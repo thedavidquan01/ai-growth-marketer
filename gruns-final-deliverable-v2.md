@@ -46,12 +46,12 @@ The only vehicle confirmed absent across all 400 ads. Competitors AG1, Seed, and
 
 | Vehicle | Adult | Kids | Total | Status |
 |---|---|---|---|---|
-| DCO carousel (brand-produced) | ~130 | ~145 | ~275 | Saturated — dominant format |
+| 2-card carousel (brand-produced) | ~130 | ~145 | ~275 | Saturated — dominant format |
 | Video (brand-produced) | ~55 | ~20 | ~75 | Active but repetitive |
-| Collab static/DCO (OLIPOP) | ~7 | ~65 | ~72 | Kids-heavy |
+| Collab static/carousel (OLIPOP) | ~7 | ~65 | ~72 | Kids-heavy |
 | Static IMAGE | ~18 | ~15 | ~33 | Active |
 | Sales/Offer stack | ~8 | ~6 | ~14 | Most Aware |
-| Influencer DCO | 3 | ~10 | ~13 | Thin |
+| Influencer carousel | 3 | ~10 | ~13 | Thin |
 | Retail/Marketplace | 0 | 11 | 11 | Walmart channel |
 | Founder VSL | **0** | 4 | 4 | **ADULT = ZERO** |
 | Authority UGC (Nurse John) | 0 | 2 | 2 | Kids only |
@@ -245,7 +245,7 @@ Every persona rated against real conversation signals. X signals via xAI Grok AP
 |---|---|---|
 | Which ads are actually converting? | We see creative, not performance. | Ads Manager export (ROAS, CPA per ad ID) |
 | Should we scale the gap personas? | Demand signal (Reddit upvotes, X citations) does not equal conversion. People talk about PCOS on Reddit; we don't know if they buy gummies. | Test at minimum viable budget ($500-1K), measure CPA against existing benchmarks |
-| Is the DCO duplication hurting? | ~90% carousel dedup could be intentional winner-scaling. | Frequency + fatigue metrics from Ads Manager |
+| Is the carousel duplication hurting? | ~90% carousel dedup could be intentional winner-scaling. | Frequency + fatigue metrics from Ads Manager |
 | Should we diversify away from OLIPOP? | 34% concentration looks risky but it might be the best-performing creative in the portfolio. | OLIPOP cluster ROAS vs. non-OLIPOP ROAS |
 | Are the 31 partner/affiliate ads incremental? | We can see they exist but not whether they drive net-new reach or cannibalize owned traffic. | Attribution data + reach/frequency overlap analysis |
 | Is Postpartum a real opportunity or a compliance risk? | Grüns has iron/B12/folate/zinc but no magnesium and no postpartum claims on-site. Labeled "plausible" not "strong." | Legal/compliance review of postpartum-adjacent claims before any creative production |

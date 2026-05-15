@@ -64,7 +64,7 @@ The tool will:
 Pulls ALL active ads (no sampling). Discovers partner/affiliate pages via keyword search.
 
 ### Phase 1 — Gemini-Verified Portfolio Analysis
-Every ad goes through `meta-get-ad` → `analyze-creatives` (Gemini). Classification is from what Gemini sees in the video, not from format tags. The format tag "DCO" does not tell you what's inside carousel cards.
+Every ad goes through `meta-get-ad` → `analyze-creatives` (Gemini). Classification is from what Gemini sees in the video, not from format tags. The format tag "carousel" does not tell you what's inside carousel cards.
 
 ### Phase 2 — Gap Mining
 Reddit: searches via `curl old.reddit.com/.json` — real posts, real quotes, no fabrication.
@@ -80,7 +80,7 @@ Final brief with confidence levels: verified (Gemini/countable) vs estimated vs 
 
 This plugin was built and stress-tested through a live audit of Grüns (greens gummy supplement, 438 ads). Key failure modes discovered and fixed:
 
-1. **Never classify from metadata alone.** DCO format tags hide UGC creator videos inside carousel cards.
+1. **Never classify from metadata alone.** carousel format tags hide UGC creator videos inside carousel cards.
 2. **Never sample.** A 45-ad sample of a 438-ad portfolio missed entire Macros.
 3. **Never fabricate quotes.** If data sources are unavailable, report it — don't generate synthetic quotes.
 4. **Never make "zero" claims without 100% Gemini verification.**

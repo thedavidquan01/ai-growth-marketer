@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grüns — Macro × Vehicle Coverage Matrix</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; padding: 32px; }
+  h1 { font-size: 22px; margin-bottom: 4px; color: #f0f6fc; }
+  .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 24px; }
+  h2 { font-size: 16px; margin: 32px 0 12px; color: #58a6ff; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+  .legend { display: flex; gap: 20px; margin-bottom: 20px; font-size: 12px; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend .swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+  .covered { background: #1f6feb; }
+  .empty { background: #21262d; }
+  .gap-fill { background: #da3633; }
+  .gap-new { background: #f0883e; }
+  .tri { background: #a371f7; }
+  table { border-collapse: collapse; font-size: 11px; width: 100%; margin-bottom: 32px; }
+  th, td { border: 1px solid #21262d; padding: 5px 6px; text-align: center; min-width: 38px; }
+  th { background: #161b22; color: #8b949e; font-weight: 600; position: sticky; top: 0; z-index: 2; }
+  th.row-header { text-align: left; min-width: 200px; position: sticky; left: 0; z-index: 3; background: #161b22; }
+  td.row-header { text-align: left; font-weight: 500; color: #c9d1d9; position: sticky; left: 0; background: #0d1117; z-index: 1; min-width: 200px; }
+  td.macro-label { text-align: left; font-weight: 700; color: #58a6ff; background: #161b22 !important; position: sticky; left: 0; z-index: 1; }
+  .c { background: #1a3a5c; color: #58a6ff; font-weight: 700; }
+  .e { background: #1a1a1a; color: #484f58; }
+  .g { background: #3d1e1e; color: #f85149; font-weight: 700; }
+  .n { background: #3d2a10; color: #f0883e; font-weight: 700; }
+  .t { background: #2d1f4e; color: #bc8cff; font-weight: 700; }
+  .section-gap { height: 4px; background: #0d1117; }
+  .section-gap td { border: none; padding: 0; background: #0d1117; }
+  .notes { font-size: 12px; color: #8b949e; line-height: 1.6; max-width: 900px; margin-top: 20px; }
+  .notes strong { color: #c9d1d9; }
+  .wrapper { overflow-x: auto; }
+  .col-group { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<h1>Grüns — Persona Coverage Matrix</h1>
+<p class="subtitle">Macro × Vehicle white-space map · Current coverage + top 10 gap opportunities</p>
+
+<div class="legend">
+  <span><span class="swatch covered"></span> Covered (ads live)</span>
+  <span><span class="swatch empty"></span> Empty cell (white space)</span>
+  <span><span class="swatch gap-fill"></span> Gap fill recommended</span>
+  <span><span class="swatch gap-new"></span> New Macro × Vehicle (gap opportunity)</span>
+  <span><span class="swatch tri"></span> Triangulated (2+ sources)</span>
+</div>
+
+<h2>Current Portfolio + Within-Portfolio White Space</h2>
+
+<div class="wrapper">
+<table>
+<thead>
+<tr>
+  <th class="row-header">Micro Persona</th>
+  <th>UGC<br>F2C<br>Kitchen</th>
+  <th>UGC<br>Expert/<br>Doctor</th>
+  <th>UGC<br>Parent<br>F2C</th>
+  <th>UGC<br>Beauty/<br>GRWM</th>
+  <th>UGC<br>Male<br>Presenter</th>
+  <th>UGC<br>Confess/<br>Reaction</th>
+  <th>UGC<br>Desk/<br>Office</th>
+  <th>Static<br>Flat-lay<br>Ingred.</th>
+  <th>Static<br>Lifestyle<br>Text</th>
+  <th>Static<br>Bold-txt<br>Product</th>
+  <th>Static<br>Before/<br>After</th>
+  <th>Reddit<br>Text<br>Static</th>
+  <th>Carousel<br>Edu/<br>Ingred.</th>
+  <th>Carousel<br>UGC<br>Hybrid</th>
+  <th>Founder<br>VSL</th>
+  <th>Struct.<br>Testim.</th>
+  <th>UGC<br>Side-by-<br>Side</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- Gut-Health Optimizer -->
+<tr><td class="macro-label" colspan="18">Gut-Health Optimizer (27%)</td></tr>
+<tr>
+  <td class="row-header">Bloat-Defeated Woman</td>
+  <td class="c">✓ 6</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="g">gap</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">Gut-Microbiome Researcher</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- GLP-1 -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18">GLP-1 Companion Seeker (est. 20-30% spend)</td></tr>
+<tr>
+  <td class="row-header">Nutrient-Depletion Worrier</td>
+  <td class="c">✓ 1</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">Muscle-Loss Anxious</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">Plateau-Frustrated Dieter</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">GLP-1-Curious Pre-Starter</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- Inner Glow -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18">Inner Glow Seeker (18%)</td></tr>
+<tr>
+  <td class="row-header">Energy-Debt Woman</td>
+  <td class="c">✓ 5</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">Hair-Skin-Nails Chaser</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- Parents Ambient -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18">Wellness-Conscious Parent — Ambient (18%)</td></tr>
+<tr>
+  <td class="row-header">Gut-Anxious Parent</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">Germ-Anxious Parent</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- Parents Acute -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18">Wellness-Conscious Parent — Acute Crisis (4%)</td></tr>
+<tr>
+  <td class="row-header">Constipation-Crisis Parent ⚠️</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- MTHFR -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18">MTHFR-Aware Nutritionist (7%)</td></tr>
+<tr>
+  <td class="row-header">Methylation-Tracker</td>
+  <td class="e">—</td>
+  <td class="c">✓ 1</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="c">✓ 2</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="g">gap</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+<!-- GAP OPPORTUNITIES -->
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr class="section-gap"><td colspan="18"></td></tr>
+<tr><td class="macro-label" colspan="18" style="color: #f85149; font-size: 13px;">▼ GAP OPPORTUNITIES (net-new Macros × Vehicles)</td></tr>
+
+<tr>
+  <td class="row-header" style="color: #bc8cff;">1. Reluctant Male Health Adopter 🔺</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header" style="color: #bc8cff;">2. Stack-Simplifier 🔺</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header" style="color: #bc8cff;">3. Self-Blaming Feeder (Picky Eater) 🔺</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="t">▲</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">4. Pill-Fatigued Compliance Dropout</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+</tr>
+<tr>
+  <td class="row-header">5. Greens-Taste Refuser</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">6. Perimenopause Navigator</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">7. Afternoon Caffeine Hostage</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">8. Postpartum Fall-Through</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">9. PCOS Protocol-Exhausted Skeptic</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+<tr>
+  <td class="row-header">10. Plant-Based Identity Performer</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="n">●</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+  <td class="e">—</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<h2>Portfolio-Wide Vehicle Totals</h2>
+<div class="wrapper">
+<table style="max-width: 600px;">
+<thead>
+<tr><th style="text-align:left; min-width:200px;">Vehicle Type</th><th>Current Ads</th><th>Micros Using</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left;">UGC Friend-to-Camera (kitchen/bath)</td><td>~18</td><td>6</td><td style="color:#58a6ff;">Saturated</td></tr>
+<tr><td style="text-align:left;">UGC Expert/Doctor Presenter</td><td>3</td><td>2</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">UGC Parent-to-Camera</td><td>5</td><td>4</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">UGC Beauty/GRWM</td><td>3</td><td>2</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">UGC Male Presenter</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">UGC Confession/Reaction</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">UGC Desk/Office Setting</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">Static Flat-lay Ingredient</td><td>4</td><td>2</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">Static Lifestyle Text</td><td>4</td><td>3</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">Static Bold-text Product</td><td>2</td><td>2</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">Static Before/After</td><td>1</td><td>1</td><td style="color:#e3b341;">Thin</td></tr>
+<tr><td style="text-align:left;">Reddit-style Text Static</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">Carousel Edu/Ingredient</td><td>8</td><td>5</td><td style="color:#c9d1d9;">Active</td></tr>
+<tr><td style="text-align:left;">Carousel UGC Hybrid</td><td>2</td><td>1</td><td style="color:#e3b341;">Thin</td></tr>
+<tr><td style="text-align:left;">Founder VSL</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">Structured Testimonial</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+<tr><td style="text-align:left;">UGC Side-by-Side Comparison</td><td>0</td><td>0</td><td style="color:#f85149; font-weight:700;">ZERO ⚠️</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="notes" style="margin-top: 32px;">
+  <strong>How to read this:</strong><br>
+  • <strong style="color:#58a6ff;">✓ N</strong> = currently shipping N ads in this cell<br>
+  • <strong style="color:#484f58;">—</strong> = empty cell (white space) — no ad exists for this Micro × Vehicle combination<br>
+  • <strong style="color:#f85149;">gap</strong> = within-portfolio gap recommended for fill (existing Micro, missing Vehicle)<br>
+  • <strong style="color:#bc8cff;">▲</strong> = triangulated gap opportunity (validated by 2+ research sources) — highest priority<br>
+  • <strong style="color:#f0883e;">●</strong> = single-source gap opportunity (Reddit or Grok+X)<br>
+  • <strong>🔺</strong> = triangulated across Reddit + Grok+X sources<br>
+  • <strong>⚠️</strong> in Vehicle Totals = zero portfolio-wide coverage — structural blind spot<br><br>
+  <strong>Key takeaway:</strong> 7 Vehicle types have ZERO ads across the entire portfolio. The right side of the matrix (Reddit-style static, Founder VSL, Structured Testimonial, Side-by-Side) is almost entirely empty — these represent net-new Entity IDs the brand has never earned. The gap rows (bottom section) show where new Macros × new Vehicles unlock audience pockets the algorithm has never served.
+</div>
+
+</body>
+</html>

@@ -59,7 +59,7 @@ Before pulling a single ad, fetch the brand's website and key landing pages. Ext
 Pull ALL active ads from every brand page (not a sample). Use `fetch_all: true` and `sort_by: total_impressions`. Also run a keyword search for the brand name to discover partner/whitelisted/affiliate ads on other pages. Report total ad count before proceeding.
 
 ### Phase 1 — Portfolio Analysis (Gemini-verified)
-Pull the brand's active and recent creative from the Ad Library MCP. For each ad: use `meta-get-ad` to extract video/image URLs from carousel cards, then run `analyze-creatives` (Gemini) on every media asset. Classify from what Gemini sees — **NEVER from metadata/format tags alone**. The format tag "DCO" does not tell you what's inside the carousel cards. In testing, metadata-only classification labeled ~70% of a portfolio as "brand-produced" when Gemini showed it was UGC creators talking to camera.
+Pull the brand's active and recent creative from the Ad Library MCP. For each ad: use `meta-get-ad` to extract video/image URLs from carousel cards, then run `analyze-creatives` (Gemini) on every media asset. Classify from what Gemini sees — **NEVER from metadata/format tags alone**. The format tag "carousel" does not tell you what's inside the carousel cards. In testing, metadata-only classification labeled ~70% of a portfolio as "brand-produced" when Gemini showed it was UGC creators talking to camera.
 
 Classify across the 9 Creative Diversity dimensions (format, persona on camera, setting, shot type, hook visual, vehicle, emotional zone, identity angle, creative angle) **plus** the three-layer taxonomy (implied Macro persona, Micro persona with desire/fear/belief, Vehicle), **plus** Schwartz awareness stage and best-fit Reiss desire.
 
@@ -171,7 +171,7 @@ Load these from `references/` on demand. Do not preload everything — the SKILL
 
 These failure modes were discovered during a live audit and must be avoided:
 
-1. **Never classify from metadata alone.** DCO format tags hide UGC creator videos inside carousel cards. "DCO" ≠ "brand-produced." The only way to know what's in an ad is to Gemini-watch it.
+1. **Never classify from metadata alone.** carousel format tags hide UGC creator videos inside carousel cards. "carousel" ≠ "brand-produced." The only way to know what's in an ad is to Gemini-watch it.
 2. **Never sample.** A 45-ad sample of a 438-ad portfolio missed entire Macros (male fertility, perimenopause, partner shopper, IBS). Pull everything.
 3. **Never fabricate quotes.** If Reddit MCP is unavailable, use `curl old.reddit.com/.json` fallback — never generate synthetic quotes from training data.
 4. **Never make "zero" claims without 100% verification.** "Zero male faces across 438 ads" was disproved when Gemini found 18+ distinct males. Absolute claims require absolute verification.
